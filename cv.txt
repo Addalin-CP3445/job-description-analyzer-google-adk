@@ -1,0 +1,14 @@
+Jane Doe
+Software Engineer
+Experience: 3.5 years
+
+Skills: Python, JavaScript, SQL, React, Node.js, Agile Methodologies, Communication.
+Certifications: AWS Certified Developer Associate
+
+Work Experience:
+Backend Developer at TechCorp (2020 - 2023)
+- Built scalable APIs in Python and Node.js.
+- Managed SQL databases and optimized queries.
+
+Education:
+B.S. Computer Science
