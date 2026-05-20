@@ -1,12 +1,14 @@
 import os
 import json
+from dotenv import load_dotenv
+load_dotenv()
+
 # pyrefly: ignore [missing-import]
 from pydantic import BaseModel, Field
 
-# Ensure you have initialized Vertex AI or have your credentials in the environment
-# e.g. os.environ["GEMINI_API_KEY"] = "your_key" OR Vertex AI setup
-# import vertexai
-# vertexai.init(project="your-project-id", location="us-central1")
+import vertexai
+# Replace "your-project-id" with your actual Google Cloud Project ID
+vertexai.init(project="gdg-project-496917", location="us-central1")
 from typing import List, Dict, Optional
 from googlesearch import search
 
@@ -44,10 +46,12 @@ def course_search_tool_func(query: str) -> str:
 
 course_search_tool = FunctionTool(func=course_search_tool_func)
 
+VERTEX_MODEL_NAME = "projects/gdg-project-496917/locations/us-central1/publishers/google/models/gemini-2.5-flash"
+
 def main():
     parser_agent = LlmAgent(
         name="ParserAgent",
-        model="gemini-2.5-flash",
+        model=VERTEX_MODEL_NAME,
         instruction="""You are a precise document parser. 
         Extract and categorize professional entities precisely from the provided raw CV and Job Description text. 
         Do not evaluate; only structure the data according to the schema.""",
@@ -56,7 +60,7 @@ def main():
 
     matchmaker_agent = LlmAgent(
         name="MatchmakerAgent",
-        model="gemini-2.5-flash",
+        model=VERTEX_MODEL_NAME,
         instruction="""You are an analytical matchmaker. 
         Perform a logical gap analysis by cross-referencing the extracted CV baseline against the job requirements. 
         Determine the weight of missing skills and map them to a remediation strategy (course, certification, or rewrite).
@@ -66,7 +70,7 @@ def main():
 
     career_coach_agent = LlmAgent(
         name="CareerCoachAgent",
-        model="gemini-2.5-flash",
+        model=VERTEX_MODEL_NAME,
         instruction="""You are a professional Career Coach.
         Translate the gap analysis into a professional, human-readable advisory report.
         Whenever the remediation_strategy flags a missing skill that requires educational intervention (like 'course' or 'certification'), 
