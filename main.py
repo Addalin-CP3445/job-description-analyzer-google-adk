@@ -98,10 +98,11 @@ def run_analysis(cv_text: str, jd_text: str) -> str:
     final_text = ""
     try:
         for chunk in result:
-            if hasattr(chunk, 'content') and chunk.content and hasattr(chunk.content, 'parts'):
-                for part in chunk.content.parts:
-                    if hasattr(part, 'text') and part.text:
-                        final_text += part.text
+            if hasattr(chunk, 'author') and chunk.author == "CareerCoachAgent":
+                if hasattr(chunk, 'content') and chunk.content and hasattr(chunk.content, 'parts'):
+                    for part in chunk.content.parts:
+                        if hasattr(part, 'text') and part.text:
+                            final_text += part.text
     except Exception as e:
         print(f"Pipeline finished, result: {result}")
     
