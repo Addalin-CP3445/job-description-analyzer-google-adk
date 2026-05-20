@@ -48,7 +48,7 @@ course_search_tool = FunctionTool(func=course_search_tool_func)
 
 VERTEX_MODEL_NAME = "projects/gdg-project-496917/locations/us-central1/publishers/google/models/gemini-2.5-flash"
 
-def main():
+def run_analysis(cv_text: str, jd_text: str) -> str:
     parser_agent = LlmAgent(
         name="ParserAgent",
         model=VERTEX_MODEL_NAME,
@@ -87,11 +87,6 @@ def main():
     session_service = InMemorySessionService()
     runner = Runner(agent=pipeline, app_name="CV_Analyzer", session_service=session_service, auto_create_session=True)
 
-    with open("cv.txt", "r") as f:
-        cv_text = f.read()
-    with open("jd.txt", "r") as f:
-        jd_text = f.read()
-
     initial_input = f"--- CV ---\n{cv_text}\n\n--- Job Description ---\n{jd_text}"
 
     print("Starting pipeline execution...")
@@ -100,18 +95,36 @@ def main():
     
     result = runner.run(new_message=msg_content, user_id="user1", session_id="session1")
     
-    print("\n--- FINAL REPORT ---")
+    final_text = ""
     try:
-        final_text = ""
         for chunk in result:
-            # chunk could be an object or a string depending on ADK internals
-            if hasattr(chunk, 'text'):
-                final_text += getattr(chunk, 'text', '')
-            else:
-                final_text += str(chunk)
-        print(final_text)
+            if hasattr(chunk, 'content') and chunk.content and hasattr(chunk.content, 'parts'):
+                for part in chunk.content.parts:
+                    if hasattr(part, 'text') and part.text:
+                        final_text += part.text
     except Exception as e:
         print(f"Pipeline finished, result: {result}")
+    
+    return final_text
+
+def main():
+    try:
+        with open("cv.txt", "r", encoding="utf-8") as f:
+            cv_text = f.read()
+    except FileNotFoundError:
+        cv_text = ""
+        print("cv.txt not found, proceeding with empty CV")
+        
+    try:
+        with open("jd.txt", "r", encoding="utf-8") as f:
+            jd_text = f.read()
+    except FileNotFoundError:
+        jd_text = ""
+        print("jd.txt not found, proceeding with empty JD")
+
+    report = run_analysis(cv_text, jd_text)
+    print("\n--- FINAL REPORT ---")
+    print(report)
 
 if __name__ == "__main__":
     main()

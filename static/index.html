@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Matchmaker AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Marked.js for parsing markdown to HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="background-mesh"></div>
+    <main class="container">
+        <header>
+            <div class="logo">✦</div>
+            <h1>CV Matchmaker AI</h1>
+            <p>Upload your CV and Job Description to get an expert career advisory report.</p>
+        </header>
+
+        <section class="form-section glass">
+            <form id="analyze-form">
+                <div class="form-group">
+                    <label for="cv-upload">1. Upload your CV (.txt, .pdf)</label>
+                    <div class="file-drop-area" id="drop-area">
+                        <span class="file-msg">Choose a file or drag it here</span>
+                        <input class="file-input" type="file" id="cv-upload" name="cv_file" accept=".txt,.pdf" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="jd-text">2. Paste Job Description</label>
+                    <textarea id="jd-text" name="jd_text" rows="6" placeholder="Paste the full job description here..." required></textarea>
+                </div>
+
+                <button type="submit" id="submit-btn">
+                    <span class="btn-text">Analyze Match</span>
+                    <div class="loader" id="btn-loader"></div>
+                </button>
+            </form>
+        </section>
+
+        <section class="results-section hidden" id="results-section">
+            <h2>Your Advisory Report</h2>
+            <div class="report-content glass" id="report-content">
+                <!-- Markdown content injected here -->
+            </div>
+            <button id="reset-btn" class="secondary-btn">Analyze Another</button>
+        </section>
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
